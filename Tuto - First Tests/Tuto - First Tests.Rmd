@@ -1,0 +1,133 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(DBI)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Let's create a data base
+
+### Exercise 
+
+In this scenario, we simulate a connection to a database.
+We turn two pre-existing dataframes (mtcars and iris) into tables.
+We will then use this database to practice our SQL.
+
+*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+
+Write the R code required to add two plus two:
+
+```{r dbCreation, exercise=TRUE}
+
+# -------- Create a connection to the database "myDataBootcampDB"
+# -------- We will use mydb to get access to the database
+mydb <- dbConnect(RSQLite::SQLite(), "myDataBootcampDB.sqlite")
+
+
+# -------- Ecriture des tables dans la base -------------
+dbWriteTable(mydb, "mtcars", mtcars)
+dbWriteTable(mydb, "iris", iris)
+
+
+
+dbListTables(mydb)
+
+
+```
+
+```{r quiz}
+quiz(
+  question("What is the name of the tables created in the previous exercise?",
+          answer("mtcar, iris", correct = TRUE),
+          answer("myDataBootcampDB, mydb"),
+          answer("myDataBootcampDB, mtcar, iris"),
+          answer("myDataBootcampDB, iris, mydb, mtacr")
+  )
+)
+```
+
+
+
+
+
+## Let's query the database
+
+You want to query the database using *SQL*.
+To send a query to the database you need to use the dbGetQuery function.
+The first parameter is the name of the connection. The second argument is a text string containing your SQL query.
+dbGetQuery(**con**, **"your query"**)
+Use the hint button if you need.
+
+## a basic query
+
+```{r query01-setup}
+
+mydb <- dbConnect(RSQLite::SQLite(), "myDataBootcampDB.sqlite")
+dbWriteTable(mydb, "mtcars", mtcars)
+dbWriteTable(mydb, "iris", iris)
+```
+
+```{r query01, exercise=TRUE, exercise.lines = 5}
+dbGetQuery(mydb, "----------")
+```
+
+```{r query01-hint-1}
+print("Your SQL query should star by SELECT")
+dbGetQuery(mydb, "SELECT")
+```
+
+```{r query01-hint-2}
+print("SELECT is followed by the name of the columns (fields) you need. To get all the columns, use * ")
+dbGetQuery(mydb, "SELECT *")
+```
+
+```{r query01-hint-3}
+print("Next step is to stipulate the name of the table using the FROM statement ")
+dbGetQuery(mydb, "SELECT * FROM")
+```
+
+
+```{r query01-solution}
+dbGetQuery(mydb, "SELECT * FROM mtcars")
+```
+
+
+
+## Topic 2
+
+### Exercise with Hint
+
+*Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
+
+Modify the following code to limit the number of rows printed to 5:
+
+```{r print-limit, exercise=TRUE, exercise.eval=TRUE}
+mtcars
+```
+
+```{r print-limit-hint}
+head(mtcars)
+```
+
+### Quiz
+
+*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
+
+Some questions to verify that you understand the purposes of various base and recommended R packages:
+
+```{r eval=FALSE, include=FALSE}
+# dbSendStatement(mydb, 'DROP TABLE mtcars')
+# dbSendStatement(mydb, 'DROP TABLE iris')
+
+# dbDisconnect(mydb)
+
+```
+
+
